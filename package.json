@@ -1,0 +1,27 @@
+{
+  "name": "daylio-backup",
+  "version": "0.1.0",
+  "description": "Parse Daylio .daylio backup files in the browser or Node, and convert them to CSV or Markdown. No upload, no dependencies beyond fflate.",
+  "license": "MIT",
+  "author": "jaysri-eng",
+  "repository": { "type": "git", "url": "https://github.com/jaysri-eng/daylio-backup" },
+  "homepage": "https://lifepatternjournal.app/tools",
+  "keywords": ["daylio", "backup", "export", "csv", "markdown", "obsidian", "mood", "journal"],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": { "fflate": "^0.8.2" },
+  "devDependencies": { "tsup": "^8.3.0", "typescript": "^5.7.0", "vitest": "^3.0.0" }
+}
