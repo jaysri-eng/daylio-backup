@@ -5,11 +5,22 @@ export interface MarkdownOptions {
   folder?: string;
 }
 
-/** A YAML flow-sequence item: bare when safe, double-quoted otherwise. */
+/**
+ * A YAML flow-sequence item: bare when safe, double-quoted otherwise.
+ * "Safe" means letters, digits, spaces, _ and -, AND not something a YAML
+ * reader would type as a boolean, null or number: a tag called "no" or
+ * "2024" must come back as the string it is.
+ */
+const YAML_RESERVED = /^(?:y|yes|n|no|true|false|on|off|null|~)$/i;
+const YAML_NUMERIC = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i;
+
 function yamlItem(value: string): string {
-  return /^[A-Za-z0-9 _\-]+$/.test(value) && !/^\s|\s$/.test(value)
-    ? value
-    : `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  const bareSafe =
+    /^[A-Za-z0-9 _\-]+$/.test(value) &&
+    !/^\s|\s$/.test(value) &&
+    !YAML_RESERVED.test(value) &&
+    !YAML_NUMERIC.test(value);
+  return bareSafe ? value : `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
 
 /** Obsidian-style inline tag: spaces to hyphens, nothing outside letters, digits, - and _. */

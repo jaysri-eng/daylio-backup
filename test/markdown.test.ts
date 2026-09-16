@@ -35,4 +35,13 @@ describe('toMarkdown', () => {
     const raw = { ...SAMPLE_RAW, tags: [{ id: 11, name: 'work: late' }] };
     expect(toMarkdown(normaliseBackup(raw))[0]!.content).toContain('tags: ["work: late"]');
   });
+
+  it('quotes values YAML would read as a boolean, null or number', () => {
+    const raw = {
+      ...SAMPLE_RAW,
+      tags: [{ id: 11, name: 'no' }, { id: 12, name: '2024' }, { id: 13, name: 'On' }],
+      dayEntries: [{ ...SAMPLE_RAW.dayEntries[0]!, tags: [11, 12, 13] }],
+    };
+    expect(toMarkdown(normaliseBackup(raw))[0]!.content).toContain('tags: ["no", "2024", "On"]');
+  });
 });
