@@ -31,3 +31,14 @@ describe('toCsv', () => {
     expect(toCsv(normaliseBackup(raw)).split('\r\n')[1]).toBe('2026-03-04,4 March,Wednesday,8:30 am,,work | bad sleep,,"Slept badly, still fine."');
   });
 });
+
+describe('twelveHour', () => {
+  it('handles midnight, noon and the minutes after each', async () => {
+    const { twelveHour } = await import('../src/csv');
+    expect(twelveHour(0, 0)).toBe('12:00 am');
+    expect(twelveHour(0, 15)).toBe('12:15 am');
+    expect(twelveHour(12, 0)).toBe('12:00 pm');
+    expect(twelveHour(12, 5)).toBe('12:05 pm');
+    expect(twelveHour(23, 59)).toBe('11:59 pm');
+  });
+});
