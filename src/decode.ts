@@ -37,7 +37,10 @@ export function decodeBackup(bytes: Uint8Array): unknown {
 function innerFileText(zipBytes: Uint8Array): string {
   let files: Record<string, Uint8Array>;
   try {
-    files = unzipSync(zipBytes);
+    // Only the journal is inflated. The assets folder holds every photo in
+    // the backup, often most of its bytes, and decompressing it on the main
+    // thread would freeze a phone for a file whose photos are never read.
+    files = unzipSync(zipBytes, { filter: (f) => f.name.endsWith('.daylio') });
   } catch {
     throw new DaylioParseError('no-backup-entry', 'The zip could not be opened.');
   }

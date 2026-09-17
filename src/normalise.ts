@@ -55,7 +55,14 @@ function entry(raw: unknown, moods: Map<number, DaylioMood>, tags: Map<number, D
   const minute = num(raw.minute) ?? 0;
   if (id === null || datetime === null || year === null || month0 === null || day === null) return null;
   const month = month0 + 1;
-  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  // A real calendar check, not a range check: 31 February must not become a
+  // date string a Date parser rejects downstream (Safari refuses it outright).
+  const probe = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  if (
+    month < 1 || month > 12 ||
+    probe.getUTCFullYear() !== year || probe.getUTCMonth() !== month - 1 || probe.getUTCDate() !== day ||
+    hour < 0 || hour > 23 || minute < 0 || minute > 59
+  ) return null;
   const tagIds = Array.isArray(raw.tags) ? raw.tags : [];
   return {
     id,

@@ -27,6 +27,18 @@ describe('decodeBackup', () => {
     expect(raw.version).toBe(15);
   });
 
+  it('does not inflate the photos in the assets folder', () => {
+    const big = new Uint8Array(4 * 1024 * 1024); // a 4 MB "photo"
+    for (let i = 0; i < big.length; i++) big[i] = i % 251;
+    const b64 = Buffer.from(JSON.stringify(SAMPLE_RAW)).toString('base64');
+    const zip = zipSync({ 'backup.daylio': strToU8(b64), 'assets/photos/one.jpg': big }, { level: 1 });
+    const before = process.memoryUsage().heapUsed;
+    const raw = decodeBackup(zip) as { version: number };
+    expect(raw.version).toBe(15);
+    // Coarse but real: inflating the 4 MB entry would show up here.
+    expect(process.memoryUsage().heapUsed - before).toBeLessThan(3 * 1024 * 1024);
+  });
+
   it('rejects an empty file', () => {
     expect(() => decodeBackup(new Uint8Array(0))).toThrow(DaylioParseError);
     try { decodeBackup(new Uint8Array(0)); } catch (e) { expect((e as DaylioParseError).code).toBe('empty'); }

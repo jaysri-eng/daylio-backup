@@ -63,6 +63,11 @@ describe('normaliseBackup', () => {
     catch (e) { expect((e as DaylioParseError).code).toBe('bad-shape'); }
   });
 
+  it('skips an entry whose date is not on the calendar', () => {
+    const raw = { ...SAMPLE_RAW, dayEntries: [{ ...SAMPLE_RAW.dayEntries[0]!, month: 1, day: 31 }, { ...SAMPLE_RAW.dayEntries[1]!, hour: 24 }] };
+    expect(normaliseBackup(raw).entries).toHaveLength(0);
+  });
+
   it('skips a malformed entry rather than failing the whole file', () => {
     const raw = { ...SAMPLE_RAW, dayEntries: [...SAMPLE_RAW.dayEntries, { id: 'x' }] };
     expect(normaliseBackup(raw).entries).toHaveLength(3);
