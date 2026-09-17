@@ -21,6 +21,10 @@ describe('toMarkdown', () => {
     expect(files[1]!.content).toContain('\n## 21:05 · Wired\n\n**Out**\n\nDinner with Sam.\nLate night.\n\nTags: #friends\n');
   });
 
+  it('leaves a blank line between two entries on the same day', () => {
+    expect(files[1]!.content).toContain('Tags: #work #bad-sleep\n\n## 21:05 · Wired\n');
+  });
+
   it('omits the title, note and tag lines when they are empty', () => {
     expect(files[0]!.content).toBe(
       '---\ndate: 2026-01-01\nmoods: [awful]\ntags: [work]\nsource: daylio\n---\n\n## 09:00 · awful\n\nTags: #work\n',

@@ -62,6 +62,7 @@ export function toMarkdown(backup: DaylioBackup, options: MarkdownOptions = {}):
       '',
       '',
     ].join('\n');
-    return { path: `${prefix}${date}.md`, content: front + entries.map(section).join('') };
+    // Sections are joined with one extra newline so a blank line separates them.
+    return { path: `${prefix}${date}.md`, content: front + entries.map(section).join('\n') };
   });
 }
