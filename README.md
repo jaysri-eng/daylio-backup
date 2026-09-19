@@ -95,6 +95,16 @@ Every failure is a `DaylioParseError` with a `code`:
 | `bad-json` | the base64 decoded to something that is not JSON |
 | `bad-shape` | JSON without a `dayEntries` array |
 
+## Try it without code
+
+The same parser runs on three pages, in your browser tab, with no upload:
+
+- [Daylio backup to CSV](https://lifepatternjournal.app/tools/daylio-to-csv)
+- [Daylio backup to Obsidian notes](https://lifepatternjournal.app/tools/daylio-to-obsidian)
+- [What repeats in your Daylio](https://lifepatternjournal.app/tools/daylio-patterns)
+
+The pages are made by the people behind [Life Pattern Journal](https://lifepatternjournal.app), a journaling app, not yet released, that runs statistics over a log like this one, on the phone.
+
 ## License
 
 MIT.
